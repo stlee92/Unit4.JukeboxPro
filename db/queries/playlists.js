@@ -14,20 +14,20 @@ export async function createPlaylist(name, description) {
   return playlist;
 }
 
-export async function getPlaylists() {
+export async function getPlaylistByUserId() {
   const sql = `
   SELECT *
-  FROM playlists
+  FROM playlists WHERE id=$1
   `;
-  const { rows: playlists } = await db.query(sql);
+  const { rows: playlists } = await db.query(sql, [id]);
   return playlists;
 }
 
-export async function getPlaylistById(id) {
+export async function getPlaylistByTrackId(id) {
   const sql = `
-  SELECT *
-  FROM playlists
-  WHERE id = $1
+  SELECT playlists.*
+  FROM playlists JOIN playlist_tracks ON playlists.id === playlists_tracks.id
+  WHERE playlists_tracks.track_id = $1
   `;
   const {
     rows: [playlist],
